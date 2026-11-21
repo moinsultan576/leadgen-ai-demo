@@ -546,7 +546,7 @@ html[lang=ar] .hero .badge,html[lang=ur] .hero .badge{letter-spacing:0}
 /* preloader */
 #preloader{position:fixed;inset:0;z-index:500;background:radial-gradient(600px 400px at 50% 45%,rgba(139,92,246,.25),transparent 70%),#07061a;display:grid;place-items:center}
 .pl-in{position:relative;width:150px;height:150px;display:grid;place-items:center;align-content:center}
-.pl-in svg{position:absolute;inset:0;transform:rotate(-90deg)}.pl-in circle{fill:none;stroke-width:3}.pl-in .bg{stroke:rgba(255,255,255,.08)}.pl-in .fg{stroke:url(#none);stroke:#a855f7;stroke-linecap:round;filter:drop-shadow(0 0 8px #a855f7)}
+.pl-in svg{position:absolute;inset:0;transform:rotate(-90deg)}.pl-in circle{fill:none;stroke-width:3}.pl-in .bg{stroke:rgba(255,255,255,.08)}.pl-in .fg{stroke:url(#none);stroke:#a855f7;stroke-linecap:round;filter:drop-shadow(0 0 8px #a855f7);stroke-dasharray:326.7;stroke-dashoffset:326.7}
 .pl-in b{font:800 40px/1 var(--ff);color:#fff}.pl-in small{color:#a5a1cc;font-size:11px;letter-spacing:.2em;margin-top:6px;text-transform:uppercase}
 /* 3D hero */
 .hero-vis{position:relative}
