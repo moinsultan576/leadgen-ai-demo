@@ -24,6 +24,12 @@ const botDone = (p, n) => p.waitForFunction(n => document.querySelectorAll('#abo
   ok(mails.some(m => m.business === 'Test Dental Care'), 'captured lead emailed to agency');
   // start gate from capture
   await p.click('[data-act=capDash]'); await p.waitForSelector('[data-form=start]'); ok(await p.inputValue('[data-form=start] [name=name]') === 'Faisal Test', 'start form prefilled from chat');
+  ok(!(await p.locator('.lampscene').evaluate(e => e.classList.contains('lit'))), 'lamp login starts dark');
+  { const h = await p.locator('.lampscene .handle').boundingBox(); await p.mouse.move(h.x + 9, h.y + 10); await p.mouse.down(); await p.mouse.move(h.x + 9, h.y + 90, { steps: 8 }); await p.mouse.up(); await p.waitForTimeout(900); }
+  ok(await p.locator('.lampscene').evaluate(e => e.classList.contains('lit')), 'pulling cord turns lamp on');
+  await p.click('[data-act=lampTab][data-v=up]'); await p.waitForTimeout(300); ok(await p.locator('.lampscene').evaluate(e => getComputedStyle(e).getPropertyValue('--lc').trim() === '#f472b6'), 'sign up tab changes light colour');
+  ok(await p.inputValue('[data-form=start] [name=name]') === 'Faisal Test', 'name kept across tabs');
+  await p.click('[data-act=lampTab][data-v=in]'); await p.waitForTimeout(300);
   await p.click('[data-form=start] button[type=submit]'); ok(await p.locator('[data-form=start] .invalid').count() === 1, 'start gate validates email');
   await p.fill('[data-form=start] [name=email]', 'v@example.com'); await p.click('[data-form=start] button[type=submit]');
   await p.waitForSelector('.kanban'); ok(location => true, ''); ok(await p.locator('.kcol[data-col=new] .pill.you').count() === 1, 'visitor appears in New column as "You"');

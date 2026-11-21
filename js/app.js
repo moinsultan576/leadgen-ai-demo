@@ -48,7 +48,7 @@
   function sendForm(p) { try { fetch(FORM_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.assign({ _captcha: 'false', _template: 'table' }, p)) }).catch(() => {}); } catch (e) {} }
   function modal(title, body, cls) { const m = $('#modal'); m.innerHTML = `<div class="mback" data-act="closeModal"></div><div class="mbox ${cls || ''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="mhead"><h3>${esc(title)}</h3><button class="ibtn" data-act="closeModal" aria-label="${t('c.close')}">${icon('x')}</button></div><div class="mbody">${body}</div></div>`; m.classList.add('open'); document.body.classList.add('noscroll'); const f = m.querySelector('input:not([type=radio]):not([type=checkbox]),select,textarea'); if (f && matchMedia('(pointer:fine)').matches) f.focus(); }
   function closeModal() { const m = $('#modal'); m.classList.remove('open'); m.innerHTML = ''; if (!$('#drawer.open')) document.body.classList.remove('noscroll'); }
-  function drawer(html) { const d = $('#drawer'); d.innerHTML = `<div class="mback" data-act="closeDrawer"></div><aside class="dpanel">${html}</aside>`; d.classList.add('open'); document.body.classList.add('noscroll'); }
+  function drawer(html) { const d = $('#drawer'); const was = d.classList.contains('open'); d.innerHTML = `<div class="mback" data-act="closeDrawer"></div><aside class="dpanel">${html}</aside>`; d.classList.add('open'); document.body.classList.add('noscroll'); if (!was) M.drawer($('.dpanel .dbody')); }
   function closeDrawer() { const d = $('#drawer'); d.classList.remove('open'); d.innerHTML = ''; document.body.classList.remove('noscroll'); }
   function log(k, v, ic) { D.activity.unshift({ k, v, at: Date.now(), ic }); D.activity = D.activity.slice(0, 40); D.notifs.unshift({ k, v, at: Date.now(), ic, read: false }); D.notifs = D.notifs.slice(0, 30); }
   const actText = a => t(a.k, { n: a.v.n != null ? a.v.n : '', ch: a.v.ch ? t('ch.' + a.v.ch) : '', l: a.v.l && lead(a.v.l) ? nm(lead(a.v.l).company) : (a.v.name || ''), s: a.v.s ? t('stg.' + a.v.s) : '' });
@@ -60,18 +60,18 @@
   function landing() {
     const sols = [['target', 's1', '#a855f7'], ['message', 's2', '#3b82f6'], ['funnel', 's3', '#f97316'], ['chart', 's4', '#22c55e'], ['radar', 's5', '#ec4899'], ['robot', 's6', '#14b8a6'], ['calendar', 's7', '#eab308'], ['globe', 's8', '#0ea5e9']];
     return `<header class="lhead"><div class="wrap lhead-in">${logo()}<nav class="lnav" aria-label="main">${[['home', '#top'], ['features', '#features'], ['how', '#how'], ['pricing', '#pricing'], ['tour', '#tour'], ['contact', '#contact']].map(([k, h]) => `<a href="${h}" data-act="scroll">${t('n.' + k)}</a>`).join('')}</nav>
-      <div class="lacts">${langMenu('lang-l')}<button class="btn grad hide-sm" data-act="start">${t('n.start')} ${icon('arrowRight', 'flip sm')}</button><button class="ibtn plain show-md" data-act="lnav" aria-label="${t('c.menu')}">${icon('menu')}</button></div></div></header>
+      <div class="lacts">${langMenu('lang-l')}<button class="btn grad hide-sm magnetic" data-act="start">${t('n.start')} ${icon('arrowRight', 'flip sm')}</button><button class="ibtn plain show-md" data-act="lnav" aria-label="${t('c.menu')}">${icon('menu')}</button></div></div></header>
     <main id="top"><section class="hero"><div class="wrap hero-in"><div class="hero-txt">
       <span class="badge">${icon('sparkles', 'sm')} ${t('h.badge')}</span>
       <h1>${t('h.t1')}<br>${t('h.t2')}<br><span class="grad-t">${t('h.t3')}</span></h1>
       <p class="lead">${t('h.sub')}</p>
-      <div class="hctas"><button class="btn grad lg" data-act="start">${t('h.cta')} ${icon('arrowRight', 'flip')}</button><button class="btn outline lg" data-act="capOpen">${icon('robot')} ${t('h.talk')}</button></div>
+      <div class="hctas"><button class="btn grad lg magnetic" data-act="start">${t('h.cta')} ${icon('arrowRight', 'flip')}</button><button class="btn outline lg" data-act="capOpen">${icon('robot')} ${t('h.talk')}</button></div>
       <ul class="hchecks">${[1, 2, 3].map(i => `<li>${icon('check')}${t('h.c' + i)}</li>`).join('')}</ul></div>
       <div class="hero-vis" aria-hidden="true">${heroScene()}</div></div></section>
     <section class="wrap stats">${[['layers', '5', 'st1'], ['globe', '3', 'st2'], ['target', '0–100', 'st3'], ['clock', '24/7', 'st4']].map(([ic, v, k]) => `<div><span class="sic">${icon(ic)}</span><div><b>${bdi(v)}</b><small>${t('st.' + k)}</small></div></div>`).join('')}</section>
     <section class="wrap sec" id="features"><div class="sec-h c"><span class="kick">${t('f.kick')}</span><h2>${t('f.t')}</h2><p class="muted">${t('f.s')}</p></div>
       <div class="fgrid">${sols.map(([ic, k, c]) => `<article class="fcard"><span class="fic" style="--c:${c}">${icon(ic)}</span><h3>${t('f.' + k)}</h3><p>${t('f.' + k + 's')}</p></article>`).join('')}</div></section>
-    <section class="wrap"><div class="revenue"><div><h2>${t('rv.t')}</h2><p>${t('rv.s')}</p><ul>${[1, 2, 3, 4, 5].map(i => `<li>${icon('check')}${t('rv.l' + i)}</li>`).join('')}</ul><button class="btn grad lg" data-act="start">${t('rv.cta')} ${icon('arrowRight', 'flip')}</button></div>
+    <section class="wrap"><div class="revenue"><div><h2>${t('rv.t')}</h2><p>${t('rv.s')}</p><ul>${[1, 2, 3, 4, 5].map(i => `<li>${icon('check')}${t('rv.l' + i)}</li>`).join('')}</ul><button class="btn grad lg magnetic" data-act="start">${t('rv.cta')} ${icon('arrowRight', 'flip')}</button></div>
       <div class="rv-vis" aria-hidden="true"><div class="growth"><small>${t('rv.card')}</small><b>${t('rv.cardV')}</b>${Charts.spark([3, 5, 4, 7, 6, 9, 8, 12, 11, 15], '#a855f7')}<span>${t('rv.cardS')}</span></div></div></div></section>
     <section class="wrap sec" id="how"><div class="sec-h c"><span class="kick">${t('w.kick')}</span><h2>${t('w.t')}</h2></div><div class="steps4">${[['radar', 1], ['send', 2], ['funnel', 3], ['calendar', 4]].map(([ic, i]) => `<div class="step"><em>${bdi(i)}</em>${icon(ic)}<h3>${t('w.' + i)}</h3><p>${t('w.' + i + 's')}</p></div>`).join('')}</div></section>
     <section class="wrap sec" id="tour"><div class="tour"><article class="tcard"><span class="fic" style="--c:#7c3aed">${icon('chart')}</span><h3>${t('tr.a')}</h3><p>${t('tr.as')}</p><button class="btn grad" data-act="start">${t('tr.ab')} ${icon('arrowRight', 'flip sm')}</button></article><article class="tcard"><span class="fic" style="--c:#22c55e">${icon('robot')}</span><h3>${t('tr.b')}</h3><p>${t('tr.bs')}</p><button class="btn outline" data-act="capOpen">${t('tr.bb')} ${icon('arrowRight', 'flip sm')}</button></article></div></section>
@@ -104,7 +104,7 @@
   }
   function capWidget() {
     capInit();
-    return `<button class="capfab ${CAP.open ? 'hide' : ''}" data-act="capOpen">${icon('robot')}<span>${t('h.talk')}</span></button>
+    return `<button class="capfab magnetic ${CAP.open ? 'hide' : ''}" data-act="capOpen">${icon('robot')}<span>${t('h.talk')}</span></button>
     <section class="wpanel ${CAP.open ? 'open' : ''}" aria-label="AI"><header><span class="wav">${icon('robot')}</span><div><b>${t('cap.title')}</b><small><i class="live"></i>${t('cap.sub')}</small></div><button class="ibtn ghost-w" data-act="capClose" aria-label="${t('c.close')}">${icon('x')}</button></header>
       <div class="wbody" id="cbody">${capMsgs()}</div><div class="wchips" id="cchips">${capChips()}</div><form class="wcomp" data-form="cap"><input name="q" maxlength="120" autocomplete="off" placeholder="${t('cap.ph')}" aria-label="${t('cap.ph')}"><button class="sendb" type="submit" aria-label="${t('c.send')}">${icon('send', 'flip')}</button></form></section>`;
   }
@@ -320,16 +320,42 @@
   function route() { const h = location.hash || '#/'; const m = h.match(/^#\/app\/?([a-z]*)\/?([a-z]*)/); if (m) return { app: true, page: m[1] || 'dashboard', sub: m[2] }; return { app: false }; }
   function render() {
     const r = route(), root = $('#root'), key = r.app ? r.page + r.sub : 'home';
-    if (r.app && USER) { const pg = PAGES[r.page] ? r.page : 'dashboard'; root.innerHTML = shell(pg, r.sub, PAGES[pg](r.sub)); document.body.className = 'in-app'; const ab = $('#abody'); if (ab) ab.scrollTop = ab.scrollHeight; }
-    else { root.innerHTML = landing(); document.body.className = 'in-land'; if (r.app) setTimeout(startModal, 30); const cb = $('#cbody'); if (cb) cb.scrollTop = cb.scrollHeight; }
-    if (render._k !== key) window.scrollTo(0, 0); render._k = key;
+    const changed = render._k !== key;
+    if (r.app && USER) { const pg = PAGES[r.page] ? r.page : 'dashboard'; root.innerHTML = shell(pg, r.sub, PAGES[pg](r.sub)); document.body.className = 'in-app'; const ab = $('#abody'); if (ab) ab.scrollTop = ab.scrollHeight; M.cursor(false); M.pill(); if (changed) M.pageIn($('#content')); }
+    else { root.innerHTML = landing(); document.body.className = 'in-land'; if (r.app) setTimeout(startModal, 30); const cb = $('#cbody'); if (cb) cb.scrollTop = cb.scrollHeight; mount3d(); M.cursor(true); M.reveal(); if (changed && render._pre) M.heroIn(); }
+    if (changed) window.scrollTo(0, 0); render._k = key;
   }
+  function mount3d() { const el = $('.hero-vis'); if (!el) return; const go = () => { if (window.FX3D && $('.hero-vis') === el) FX3D.mount(el); }; if (window.FX3D) go(); else window.addEventListener('fx3d-ready', go, { once: true }); }
   window.addEventListener('hashchange', () => { UI.sidebar = false; UI.menus = null; closeDrawer(); closeModal(); render(); });
+  const LAMP = { on: false, tab: 'in', sound: false };
   function startModal(pre) {
-    modal(t('start.t'), `<p class="muted">${t('start.s')}</p><form class="form" data-form="start" novalidate><label>${t('start.name')} *<input name="name" required maxlength="60" autocomplete="name" value="${esc(pre || '')}"></label><label>${t('start.email')} *<input name="email" type="email" required maxlength="120" autocomplete="email"></label>
-      <div class="row2"><label>${t('se.agency')}<input name="company" maxlength="80"></label><label>${t('start.wa')}<input name="whatsapp" type="tel" maxlength="25"></label></div><p class="err" hidden>${t('start.req')}</p>
-      <button class="btn grad block lg" type="submit">${t('start.go')} ${icon('arrowRight', 'flip')}</button><p class="muted sm c">${icon('shield', 'sm')} ${t('start.privacy')}</p></form>`, 'narrow');
+    closeModal(); LAMP.on = false;
+    const m = $('#modal');
+    m.innerHTML = `<div class="lampscene tab-${LAMP.tab}" role="dialog" aria-modal="true" aria-label="${esc(t('start.t'))}"><button class="ibtn lamp-x" data-act="closeModal" aria-label="${t('c.close')}">${icon('x')}</button>
+      <div class="lamp-stage"><div class="lamp" aria-hidden="true"><svg viewBox="0 0 220 360" class="lamp-svg"><defs><linearGradient id="lsh" x1="0" x2="1"><stop offset="0" stop-color="#2a2550"/><stop offset=".5" stop-color="#46407e"/><stop offset="1" stop-color="#211d44"/></linearGradient></defs>
+        <ellipse cx="110" cy="340" rx="70" ry="12" fill="#1c1838"/><rect x="104" y="150" width="12" height="190" rx="6" fill="#2f2a5c"/><path d="M40 150 L180 150 L150 70 L70 70 Z" fill="url(#lsh)"/><rect x="65" y="62" width="90" height="12" rx="6" fill="#3b3570"/>
+        <ellipse class="bulb" cx="110" cy="152" rx="26" ry="10"/></svg>
+        <div class="beam"></div>
+        <div class="cord" data-act="cordTrack"><i class="cline"></i><button class="handle" data-act="cord" aria-label="${t('lp.pull')}"></button></div></div>
+        <p class="lamp-hint">${icon('arrowUp', 'sm flipv')} ${t('lp.pull')}</p><button class="btn outline sm lamp-kb" data-act="lampToggle">${icon('bolt', 'sm')} ${t('lp.turn')}</button></div>
+      <div class="lamp-card"><div class="lp-tabs"><button class="${LAMP.tab === 'in' ? 'on' : ''}" data-act="lampTab" data-v="in">${t('lp.in')}</button><button class="${LAMP.tab === 'up' ? 'on' : ''}" data-act="lampTab" data-v="up">${t('lp.up')}</button><span class="lp-ind"></span></div>
+        <h3>${t(LAMP.tab === 'in' ? 'start.t' : 'lp.upT')}</h3><p class="muted sm">${t('start.s')}</p>
+        <form class="form" data-form="start" novalidate><label>${t('start.name')} *<input name="name" required maxlength="60" autocomplete="name" value="${esc(pre || '')}"></label><label>${t('start.email')} *<input name="email" type="email" required maxlength="120" autocomplete="email"></label>
+        ${LAMP.tab === 'up' ? `<div class="row2"><label>${t('se.agency')}<input name="company" maxlength="80"></label><label>${t('start.wa')}<input name="whatsapp" type="tel" maxlength="25"></label></div>` : ''}<p class="err" hidden>${t('start.req')}</p>
+        <button class="btn lampbtn block lg magnetic" type="submit">${t('start.go')} ${icon('arrowRight', 'flip')}</button><p class="muted sm c">${icon('shield', 'sm')} ${t('start.privacy')}</p></form>
+        <button class="sndbtn" data-act="lampSound" aria-pressed="${LAMP.sound}">${icon(LAMP.sound ? 'mic' : 'x', 'sm')} ${t('lp.sound')}</button></div></div>`;
+    m.classList.add('open'); document.body.classList.add('noscroll');
+    if (!M.on) setLamp(true);
   }
+  function setLamp(on) { LAMP.on = on; const sc = $('.lampscene'); M.lampOn(sc, on); if (on) { M.hum(LAMP.sound); setTimeout(() => { const i = $('.lampscene input'); if (i && matchMedia('(pointer:fine)').matches) i.focus(); }, 350); } }
+  /* lamp cord drag (spring back; pull > 50px toggles) */
+  document.addEventListener('pointerdown', ev => {
+    const h = ev.target.closest('.lampscene .handle'); if (!h) return; ev.preventDefault();
+    const sy = ev.clientY, line = $('.lampscene .cline'); let dy = 0;
+    const mv = e => { dy = Math.max(0, Math.min(110, e.clientY - sy)); h.style.transform = `translateY(${dy}px)`; line.style.height = (70 + dy) + 'px'; };
+    const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); line.style.height = ''; h.style.transform = ''; if (dy > 45) { setLamp(!LAMP.on); } M.cordSpring(h); };
+    document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up);
+  });
 
   /* ================= EVENTS ================= */
   function globalSearch(q) {
@@ -340,7 +366,7 @@
     box.classList.add('open');
   }
   const closeMenus = () => { UI.menus = null; $$('.dd.open').forEach(d => d.classList.remove('open')); };
-  function moveLead(id, s) { const l = lead(id); if (!l || l.stage === s) return; l.stage = s; l.touched = Date.now(); log(s === 'converted' ? 'act.client' : 'act.stage', { l: id, s }, s === 'converted' ? 'user' : 'kanban'); save(); render(); toast(t('pp.moved', { s: t('stg.' + s) })); }
+  function moveLead(id, s) { const l = lead(id); if (!l || l.stage === s) return; l.stage = s; l.touched = Date.now(); log(s === 'converted' ? 'act.client' : 'act.stage', { l: id, s }, s === 'converted' ? 'user' : 'kanban'); save(); render(); M.drop($(`.kcard[data-id="${id}"]`)); toast(t('pp.moved', { s: t('stg.' + s) })); }
   document.addEventListener('click', async ev => {
     const a = ev.target.closest('[data-act]');
     if (!a && ev.pointerType && ev.pointerType !== 'mouse') { const kc = ev.target.closest('.kcard'); if (kc) { leadDrawer(kc.dataset.id); return; } }
@@ -376,7 +402,7 @@
       case 'addLead': modal(t('ld.add'), leadForm()); break;
       case 'delLead': if (confirm(t('c.confirmDel'))) { D.leads = D.leads.filter(l => l.id !== id); save(); closeDrawer(); toast(t('c.deleted')); render(); } break;
       case 'convert': { closeDrawer(); moveLead(id, 'converted'); break; }
-      case 'view': UI.view = a.dataset.v; render(); break;
+      case 'view': UI.view = a.dataset.v; render(); M.swap($('.kanban') || $('.tbl-wrap')); break;
       case 'rescore': {
         const l = lead(id); a.disabled = true; a.innerHTML = `<span class="spin"></span> ${t('c.thinking')}`;
         const r = await AI.score(leadInfo(l), L(), agency()); const sc = r || fallbackScore(l);
@@ -406,6 +432,9 @@
       case 'apDone': { const ap = D.appts.find(x => x.id === id); ap.status = 'done'; save(); render(); break; }
       case 'export': exportCSV(); break;
       case 'asChip': aAsk(a.dataset.txt); break;
+      case 'lampToggle': case 'cord': if (act === 'cord' && ev.detail !== 0) break; setLamp(!LAMP.on); break;
+      case 'lampTab': { LAMP.tab = a.dataset.v; const nm0 = ($('.lampscene [name=name]') || {}).value || ''; const wasOn = LAMP.on; startModal(nm0); if (wasOn) { LAMP.on = true; $('.lampscene').classList.add('lit'); $('.lampscene .lamp-card').style.opacity = 1; } break; }
+      case 'lampSound': LAMP.sound = !LAMP.sound; a.setAttribute('aria-pressed', LAMP.sound); a.innerHTML = `${icon(LAMP.sound ? 'mic' : 'x', 'sm')} ${t('lp.sound')}`; if (LAMP.sound && LAMP.on) M.hum(true); break;
     }
   });
   document.addEventListener('change', ev => {
@@ -467,6 +496,8 @@
     const csv = '﻿' + rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'leadgen-leads-sample.csv'; document.body.appendChild(a); a.click(); a.remove(); toast(t('an.done'));
   }
-  render(); AI.health().then(() => { if (route().page === 'settings') render(); });
+  render();
+  M.preload(new Promise(r => { if (window.FX3D || route().app) r(); else { window.addEventListener('fx3d-ready', r, { once: true }); setTimeout(r, 2500); } })).then(() => { render._pre = true; if (!route().app) M.heroIn(); });
+  AI.health().then(() => { if (route().page === 'settings') render(); });
   window.__LG = { get D() { return D; }, CAP, ACHAT, render };
 })();
